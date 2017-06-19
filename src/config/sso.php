@@ -6,5 +6,7 @@
  * Time: 下午9:52
  */
 return [
-    "message" => "Welcome to your new package"
+    'client_id'=>'',
+    'client_secret'=> '',
+    'client_auth_url'=>'',
 ];
