@@ -1,5 +1,5 @@
 {
-    "name": "df/sso",
+    "name": "chromefan/df-laravel-sso",
     "description": "df sso",
     "keywords": ["sso", "df-sso"],
     "license": "MIT",

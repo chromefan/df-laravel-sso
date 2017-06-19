@@ -5,7 +5,7 @@
  * Date: 2017/6/15
  * Time: 下午8:13
  */
-namespace df\sso\src;
+namespace sso;
 
 class SSO{
 
