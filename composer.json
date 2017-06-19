@@ -17,7 +17,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Dfsso\\SSO\\": "src/"
+            "DfSSO\\SSO\\": "src/"
         }
     },
     "require-dev": {
