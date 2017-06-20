@@ -22,7 +22,7 @@ class Permission
     public function handle($request, Closure $next)
     {
 
-        $actions = $request->route()->uri;
+        $actions = $request->path();;
         if($actions=='/'){
             $actions='home';
         }
