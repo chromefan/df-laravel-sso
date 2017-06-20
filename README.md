@@ -35,6 +35,7 @@ Open `config/sso.php` ,需要在 [鼎复用户中心](http://usercenter.df.cn/) 
 
 打开`routes/web.php`
 将需要加入控制的路由放入permission组
+
 `Route::group(['middleware' => 'permission'],function (){}`
 
 ## 权限控制
