@@ -6,8 +6,10 @@
  * Time: 下午9:50
  */
 namespace DfSSO\SSO;
+use DfSSO\SSO\Middleware\Permission;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Routing\Router;
+use Illuminate\Contracts\Container\Container as Application;
 
 
 class SSOServiceProvider extends ServiceProvider
@@ -31,6 +33,19 @@ class SSOServiceProvider extends ServiceProvider
         // Register 'disqus-sso' instance container to our DisqusAuth object
         $this->app->singleton('sso',function ($app) {
             return new SSO;
+        });
+        $this->registerMiddlewareBindings($this->app);
+    }
+    /**
+     * Register the Middleware to the IoC container because
+     * some middleware need additional parameters.
+     *
+     * @return void
+     */
+    public function registerMiddlewareBindings(Application $app)
+    {
+        $app->singleton(Permission::class, function ($app) {
+            return new Permission($app['sso']);
         });
     }
     /**

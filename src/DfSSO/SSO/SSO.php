@@ -7,47 +7,54 @@
  */
 namespace DfSSO\SSO;
 
+use Illuminate\Support\Facades\Config;
+
 class SSO{
 
-    public static $api_url;
-    public static $auth_key;
-    public static $user;
-    public static $login_url;
-    public static  $base_url;
-    public static $client_id;
+    protected  $api_url;
+    protected  $auth_key;
+    protected  $user;
+    protected  $login_url;
+    protected  $base_url;
+    protected  $client_id;
 
-
-
-    public static function setConfig(){
-        self::$api_url = env('CLIENT_AUTH_URL');
-        self::$auth_key = 'auth_user';
-        self::$login_url = self::$api_url.'/login';
-        self::$base_url = 'http://'.$_SERVER['SERVER_NAME'];
-        self::$client_id = env('CLIENT_ID');
+    public function __construct()
+    {
+        $this->api_url = Config::get('sso.api_url');
+        $this->auth_key = Config::get('sso.auth_key');
+        $this->login_url = $this->api_url.'/login';
+        $this->base_url = 'http://'.$_SERVER['SERVER_NAME'];
+        $this->client_id = Config::get('sso.client_id');
+        $this->client_secret = Config::get('sso.client_secret');
     }
-    public static function isLogin(){
-        self::setConfig();
-        $user = session()->get('auth_user');
+
+    public function test(){
+        echo ($this->client_id);
+    }
+
+    public  function isLogin(){
+        $user = session()->get($this->auth_key);
         if(isset($user['uid'])){
             return true;
         }
         return false;
     }
 
-    public static function login($request){
-        self::setConfig();
+    public  function login($request){
+
+        $api_url = $this->api_url;
         if(!isset($request->access_token)){
 
             $post = [
-                'client_id' => env('CLIENT_ID'),
-                'client_secret' => env('CLIENT_SECRET'),
+                'client_id' => $this->client_id,
+                'client_secret' => $this->client_secret,
                 'username'  =>  $request->username,
                 'password' => $request->password,
                 'grant_type'    =>  'password'
             ];
-            $api_url = self::$api_url;
+
             $url=$api_url.'/api/oauth/access_token';
-            $res=self::curl_post($url,$post);
+            $res=$this->curl_post($url,$post);
 
             $result=json_decode($res,true);
             if(isset($result['access_token'])){
@@ -64,32 +71,32 @@ class SSO{
         $res = file_get_contents($url);
         $res = json_decode($res,true);
         $auth_user = $res['data'];
-        session()->put(self::$auth_key,json_encode($auth_user));
-        return self::$user;
+        session()->put($this->auth_key,$auth_user);
+        session()->save();
+        return $auth_user;
     }
-    public static function getUser($access_token='',$user=''){
-        if(self::isLogin()){
-            return session()->get(self::$auth_key);
+    public  function getUser($access_token='',$user=''){
+        if($this->isLogin()){
+            return session()->get($this->auth_key);
         }
         if(!empty($access_token) && !empty($user)){
-            $url = self::$api_url.'/api/users/'.$user.'?access_token='.$access_token;
+            $url = $this->api_url.'/api/users/'.$user.'?access_token='.$access_token;
             $res = file_get_contents($url);
             $res = json_decode($res,true);
-            self::$user = $res['data'];
-            session()->put(self::$auth_key,self::$user);
+            $this->user = $res['data'];
+            session()->put($this->auth_key,$this->user);
             session()->save();
-            return self::$user;
+            return $this->user;
         }
         return '';
-
     }
-    public static function redirectToLogin($actions){
-        SSO::setConfig();
+    public  function redirectToLogin($actions){
+
         if($actions=='/'){
             $actions='';
         }
-        $callback = self::$base_url.'/'.$actions;
-        $url = SSO::$login_url.'?client_id='.self::$client_id.'&&callback='.urlencode($callback);
+        $callback = $this->base_url.'/'.$actions;
+        $url = $this->login_url.'?client_id='.$this->client_id.'&&callback='.urlencode($callback);
         Header("HTTP/1.1 303 See Other");
         Header("Location: $url");
         exit;
@@ -98,7 +105,7 @@ class SSO{
         session()->flush();
     }
 
-    public static function curl_post($url, $data = array(), $header = array()) {
+    public  function curl_post($url, $data = array(), $header = array()) {
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
