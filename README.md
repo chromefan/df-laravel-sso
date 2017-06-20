@@ -35,15 +35,24 @@ Open `config/sso.php` ,需要在 [鼎复用户中心](http://usercenter.df.cn/) 
 
 ##权限控制
 1、首先在[鼎复用户中心](http://usercenter.df.cn/) 中注册app，并创建角色、权限，并给用户赋予角色；
-2、权限值pvalue必须与要控制的路由route名一一对应
-3、如果需要管理员权限，请设置权限值为'admin'或者将该用户设为leader或者用户中心管理员
+
+2、权限值pvalue必须与要控制的路由route名一一对应'
+
+3、如果需要管理员权限，请设置权限值为'admin'或者将该用户设为leader或者用户中心管理员'
+
 ##使用示例
 1、检测登录
+
 `$user = SSO::isLogin()`
+
 2、获取用户信息
+
 `$user = SSO::getUser()`
+
 3、注销退出
+
 `SSO::logout()`
+
 
 
 
