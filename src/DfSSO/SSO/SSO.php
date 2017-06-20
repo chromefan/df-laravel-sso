@@ -28,10 +28,10 @@ class SSO{
         $this->client_secret = Config::get('sso.client_secret');
     }
 
-    public function test(){
-        echo ($this->client_id);
-    }
 
+    /**检测登录
+     * @return bool
+     */
     public  function isLogin(){
         $user = session()->get($this->auth_key);
         if(isset($user['uid'])){
@@ -40,6 +40,11 @@ class SSO{
         return false;
     }
 
+    /**
+     * 本地登录
+     * @param $request
+     * @return mixed
+     */
     public  function login($request){
 
         $api_url = $this->api_url;
@@ -75,6 +80,13 @@ class SSO{
         session()->save();
         return $auth_user;
     }
+
+    /**
+     * 获取用户信息
+     * @param string $access_token
+     * @param string $user
+     * @return string
+     */
     public  function getUser($access_token='',$user=''){
         if($this->isLogin()){
             return session()->get($this->auth_key);
@@ -90,6 +102,11 @@ class SSO{
         }
         return '';
     }
+
+    /**
+     * 跳转到登录页面
+     * @param $actions
+     */
     public  function redirectToLogin($actions){
 
         if($actions=='/'){
@@ -101,7 +118,11 @@ class SSO{
         Header("Location: $url");
         exit;
     }
-    public static function logout(){
+
+    /**
+     * 注销退出
+     */
+    public  function logout(){
         session()->flush();
     }
 
