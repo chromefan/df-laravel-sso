@@ -8,5 +8,6 @@
 return [
     'client_id'=>'',
     'client_secret'=> '',
-    'client_auth_url'=>'',
+    'api_url'=>'http://usertest.df.cn',
+    'auth_key'=>'auth_name',
 ];
