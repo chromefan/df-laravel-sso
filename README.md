@@ -23,7 +23,7 @@ A simple Laravel packages used to generate payload for the Disqus SSO feature.
 
 ## Configuration
 
-Open `config/sso.php` and fill in your Disqus _secret_ and _public_ API keys. You can find those at your [Disqus applications](http://usercenter.df.cn/) page.
+Open `config/sso.php` and fill in your Disqus _secret_ and _public_ API keys. You can find those at your [鼎复用户中心](http://usercenter.df.cn/) page.
 
 
 
