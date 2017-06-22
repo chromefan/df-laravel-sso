@@ -8,6 +8,7 @@
 return [
     'client_id'=>'',             //从用户中心注册获取aclient_id
     'client_secret'=> '',           //从用户中心注册获取client_secret
-    'api_url'=>'http://usertest.df.cn',     //用户中心url
+    'api_url'=>'http://uc.df.cn',     //用户中心url
     'auth_key'=>'auth_name',            //session key 存储用户信息
+    'is_permission'=>false,            //是否需要权限
 ];

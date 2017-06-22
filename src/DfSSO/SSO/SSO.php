@@ -17,6 +17,7 @@ class SSO{
     protected  $login_url;
     protected  $base_url;
     protected  $client_id;
+    protected  $is_permission;
 
     public function __construct()
     {
@@ -26,6 +27,7 @@ class SSO{
         $this->base_url = 'http://'.$_SERVER['SERVER_NAME'];
         $this->client_id = Config::get('sso.client_id');
         $this->client_secret = Config::get('sso.client_secret');
+        $this->is_permission = Config::get('sso.is_permission');
     }
 
 
@@ -38,6 +40,11 @@ class SSO{
             return true;
         }
         return false;
+    }
+
+    public function isCheckPermission(){
+        $this->is_permission = Config::get('sso.is_permission');
+        return $this->is_permission;
     }
 
     /**

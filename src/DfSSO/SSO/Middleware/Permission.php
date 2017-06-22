@@ -37,6 +37,9 @@ class Permission
         if(empty($user['uid'])){
             SSO::redirectToLogin($actions);
         }
+        if(!SSO::isCheckPermission()){
+            return $next($request);
+        }
         if(empty($user['permission'])){
             SSO::redirectToLogin($actions);
         }
