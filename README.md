@@ -21,8 +21,11 @@
 
 `$middleware[`
      `\Illuminate\Session\Middleware\StartSession::class,`
-     `'SSO'=>DfSSO\SSO\Facades\SSO::class,`
+    
  `]`
+ `$routeMiddleware[`
+     `permission' => \DfSSO\SSO\Middleware\Permission::class,`
+  `]`
 
 - Publish the configuration file:
 
