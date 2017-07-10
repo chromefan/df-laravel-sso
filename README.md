@@ -23,6 +23,7 @@
      `\Illuminate\Session\Middleware\StartSession::class,`
     
  `]`
+ 
  `$routeMiddleware[`
      `permission' => \DfSSO\SSO\Middleware\Permission::class,`
   `]`

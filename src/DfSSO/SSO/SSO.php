@@ -131,6 +131,9 @@ class SSO{
      */
     public  function logout(){
         session()->flush();
+        $url = $this->api_url.'/logout';
+        Header("HTTP/1.1 303 See Other");
+        Header("Location: $url");
     }
 
     public  function curl_post($url, $data = array(), $header = array()) {
