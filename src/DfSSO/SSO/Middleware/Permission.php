@@ -26,14 +26,8 @@ class Permission
         if($actions=='/'){
             $actions='home';
         }
-        if(isset($request->access_token)){
-            $access_token = $request->access_token;
-            $username = $request->user;
-        }else{
-            $access_token = $username = '';
-        }
-        $user = SSO::getUser($access_token,$username);
 
+        $user = SSO::getUser();
         if(empty($user['uid'])){
             SSO::redirectToLogin($actions);
         }

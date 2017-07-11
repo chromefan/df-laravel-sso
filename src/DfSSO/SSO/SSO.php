@@ -8,6 +8,7 @@
 namespace DfSSO\SSO;
 
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Cookie;
 
 class SSO{
 
@@ -35,11 +36,22 @@ class SSO{
      * @return bool
      */
     public  function isLogin(){
-        $user = session()->get($this->auth_key);
-        if(isset($user['uid'])){
-            return true;
+        $sso_token = $this->getCookie();
+        if(!empty($sso_token)){
+            return $sso_token;
+        }else{
+            $this->redirectToLogin('/');
         }
         return false;
+    }
+    public function getCookie(){
+        if(isset($_COOKIE['sso_token']) && !empty($_COOKIE['sso_token'])){
+            $sso_token = $_COOKIE['sso_token'];
+            $sso_token  = base64_decode($sso_token);
+            parse_str($sso_token,$this->sso_token);
+            return $this->sso_token;
+        }
+        return '';
     }
 
     public function isCheckPermission(){
@@ -94,20 +106,23 @@ class SSO{
      * @param string $user
      * @return string
      */
-    public  function getUser($access_token='',$user=''){
-        if($this->isLogin()){
-            return session()->get($this->auth_key);
-        }
-        if(!empty($access_token) && !empty($user)){
-            $url = $this->api_url.'/api/users/'.$user.'?access_token='.$access_token;
+    public  function getUser(){
+        if($sso_token = $this->isLogin()){
+            $url = $this->api_url.'/api/users/'.$sso_token['user'].'?access_token='.$sso_token['access_token'];
+            if(!@file_get_contents($url)){
+                return false;
+            }
             $res = file_get_contents($url);
             $res = json_decode($res,true);
+            if(empty($res['data'])){
+                return false;
+            }
             $this->user = $res['data'];
             session()->put($this->auth_key,$this->user);
             session()->save();
             return $this->user;
         }
-        return '';
+
     }
 
     /**
