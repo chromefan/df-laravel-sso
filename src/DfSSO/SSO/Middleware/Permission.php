@@ -22,20 +22,20 @@ class Permission
     public function handle($request, Closure $next)
     {
 
-        $actions = $request->path();;
+        $actions = $request->path();
         if($actions=='/'){
             $actions='home';
         }
 
         $user = SSO::getUser();
         if(empty($user['uid'])){
-            SSO::redirectToLogin($actions);
+            SSO::redirectToLogin($actions,false);
         }
         if(!SSO::isCheckPermission()){
             return $next($request);
         }
         if(empty($user['permission'])){
-            SSO::redirectToLogin($actions);
+            SSO::redirectToLogin($actions,false);
         }
         $permissions=[];
         foreach ($user['permission'] as $v){
@@ -47,7 +47,7 @@ class Permission
         }elseif(in_array($actions,$permissions)){
             return $next($request);
         }else{
-            SSO::redirectToLogin($actions);
+            SSO::redirectToLogin($actions,false);
         }
     }
 }
