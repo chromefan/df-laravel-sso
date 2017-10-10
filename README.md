@@ -34,7 +34,7 @@
 
 ## 配置
 
-Open `config/sso.php` ,需要在 [鼎复用户中心](http://usercenter.df.cn/) 中注册app，获取client_id,
+Open `config/sso.php` ,需要在 [鼎复用户中心](http://uc.df.cn/) 中注册app，获取client_id,
 和client_secret。
 
 打开`routes/web.php`
