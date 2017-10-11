@@ -47,7 +47,7 @@ class Permission
         }elseif(in_array($actions,$permissions)){
             return $next($request);
         }else{
-            SSO::redirectToLogin($actions,false);
+            SSO::redirectToLogin($actions);
         }
     }
 }

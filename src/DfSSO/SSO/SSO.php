@@ -129,17 +129,13 @@ class SSO{
      * 跳转到登录页面
      * @param $actions
      */
-    public  function redirectToLogin($actions,$is_allown=true){
+    public  function redirectToLogin($actions){
 
         if($actions=='/'){
             $actions='';
         }
-        if($is_allown==true){
-            $callback = $this->base_url.'/'.$actions;
-            $url = $this->login_url.'?client_id='.$this->client_id.'&&callback='.urlencode($callback);
-        }else{
-            $url = $this->login_url;
-        }
+        $callback = $this->base_url.'/'.$actions;
+        $url = $this->login_url.'?client_id='.$this->client_id.'&&callback='.urlencode($callback);
         Header("HTTP/1.1 303 See Other");
         Header("Location: $url");
         exit;
