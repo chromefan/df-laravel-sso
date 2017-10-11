@@ -140,6 +140,16 @@ class SSO{
         Header("Location: $url");
         exit;
     }
+    /**
+     * 跳转到登录页面
+     * @param $actions
+     */
+    public  function redirectToLoginPage(){
+        $url = $this->login_url;
+        Header("HTTP/1.1 303 See Other");
+        Header("Location: $url");
+        exit;
+    }
 
     /**
      * 注销退出
