@@ -6,9 +6,9 @@
  * Time: 下午9:52
  */
 return [
-    'client_id'=>'',             //从用户中心注册获取aclient_id
-    'client_secret'=> '',           //从用户中心注册获取client_secret
-    'api_url'=>'http://uc.df.cn',     //用户中心url
+    'client_id'=> env('USER_CLIENT_ID'),             //从用户中心注册获取aclient_id
+    'client_secret'=> env('USER_CLIENT_SECRET'),           //从用户中心注册获取client_secret
+    'api_url'=> env('USER_API_URL'),     //用户中心url
     'auth_key'=>'auth_name',            //session key 存储用户信息
-    'is_permission'=>false,            //是否需要权限
+    'is_permission'=>env('USER_IS_PERMISSION'),            //是否需要权限
 ];

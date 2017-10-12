@@ -35,7 +35,7 @@ class Permission
             return $next($request);
         }
         if(empty($user['permission'])){
-            SSO::redirectToLogin($actions);
+            SSO::redirectToLoginPage();
         }
         $permissions=[];
         foreach ($user['permission'] as $v){
