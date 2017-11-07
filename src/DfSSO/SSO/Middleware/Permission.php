@@ -21,12 +21,10 @@ class Permission
      */
     public function handle($request, Closure $next)
     {
-
         $actions = $request->path();
         if($actions=='/'){
             $actions='home';
         }
-
         $user = SSO::getUser();
         if(empty($user['uid'])){
             SSO::redirectToLogin($actions);
@@ -34,20 +32,17 @@ class Permission
         if(!SSO::isCheckPermission()){
             return $next($request);
         }
-        if(empty($user['permission'])){
-            SSO::redirectToLoginPage();
-        }
         $permissions=[];
         foreach ($user['permission'] as $v){
             $permissions[] = $v['pvalue'];
         }
         //权限控制
-        if($user['is_admin']==1 || $user['is_leader']==1 || in_array('admin',$permissions)){
+        if($user['is_admin']==1  || in_array('admin',$permissions)){
             return $next($request);
         }elseif(in_array($actions,$permissions)){
             return $next($request);
         }else{
-            SSO::redirectToLoginPage();
+            return SSO::redirectToLoginPage();
         }
     }
 }

@@ -19,6 +19,7 @@ class SSO{
     protected  $base_url;
     protected  $client_id;
     protected  $is_permission;
+    protected  $is_api=false;
 
     public function __construct()
     {
@@ -29,6 +30,9 @@ class SSO{
         $this->client_id = Config::get('sso.client_id');
         $this->client_secret = Config::get('sso.client_secret');
         $this->is_permission = Config::get('sso.is_permission');
+        if(Config::get('sso.is_api')){
+            $this->is_api = Config::get('sso.is_api');
+        }
     }
 
 
@@ -95,7 +99,9 @@ class SSO{
         $res = file_get_contents($url);
         $res = json_decode($res,true);
         $auth_user = $res['data'];
-        session()->put($this->auth_key,$auth_user);
+        $sso_token['user'] = $request->username;
+        $sso_token['access_token'] = $access_token;
+        session()->put($this->auth_key,$sso_token);
         session()->save();
         return $auth_user;
     }
@@ -107,22 +113,25 @@ class SSO{
      * @return string
      */
     public  function getUser(){
-        if($sso_token = $this->isLogin()){
-            $url = $this->api_url.'/api/users/'.$sso_token['user'].'?access_token='.$sso_token['access_token'];
-            if(!@file_get_contents($url)){
-                return false;
-            }
-            $res = file_get_contents($url);
-            $res = json_decode($res,true);
-            if(empty($res['data'])){
-                return false;
-            }
-            $this->user = $res['data'];
-            session()->put($this->auth_key,$this->user);
-            session()->save();
-            return $this->user;
+        if($this->is_api){
+            $sso_token = session()->get($this->auth_key);
+        }else{
+            $sso_token = $this->isLogin();
         }
-
+        if(!isset($sso_token['user'])){
+            return false;
+        }
+        $url = $this->api_url.'/api/users/'.$sso_token['user'].'?access_token='.$sso_token['access_token'];
+        if(!@file_get_contents($url)){
+            return false;
+        }
+        $res = file_get_contents($url);
+        $res = json_decode($res,true);
+        if(empty($res['data'])){
+            return false;
+        }
+        $this->user = $res['data'];
+        return $this->user;
     }
 
     /**
@@ -130,6 +139,9 @@ class SSO{
      * @param $actions
      */
     public  function redirectToLogin($actions){
+        if($this->is_api){
+            return response()->json(['msg'=>'权限不够或者登录已失效'],'401');
+        }
 
         if($actions=='/'){
             $actions='';
@@ -145,6 +157,9 @@ class SSO{
      * @param $actions
      */
     public  function redirectToLoginPage(){
+        if($this->is_api){
+            return response()->json(['msg'=>'权限不够或者登录已失效'],'401');
+        }
         $url = $this->login_url;
         Header("HTTP/1.1 303 See Other");
         Header("Location: $url");
@@ -156,6 +171,9 @@ class SSO{
      */
     public  function logout(){
         session()->flush();
+        if($this->is_api){
+            return response()->json(['msg'=>'注销成功'],'200');
+        }
         $url = $this->api_url.'/logout';
         Header("HTTP/1.1 303 See Other");
         Header("Location: $url");

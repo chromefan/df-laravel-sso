@@ -11,4 +11,5 @@ return [
     'api_url'=> env('USER_API_URL'),     //用户中心url
     'auth_key'=>'auth_name',            //session key 存储用户信息
     'is_permission'=>env('USER_IS_PERMISSION'),            //是否需要权限
+    'is_api'=>env('USER_IS_API'),            //是否通过API调用
 ];
